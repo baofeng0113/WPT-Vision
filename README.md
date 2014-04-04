@@ -2,7 +2,7 @@ WPT-Vision
 ==========
 WPT-Vision是一个Wordpress中文主题，基于Bootstrap开发。页面头部借（chao）鉴（xi）了BLOG.ALIYUN.COM，尾部借（chao）鉴（xi）了UPYUN.COM。
 
-### 如果直接使用该主题注意一下几点： 
+### 如果直接使用该主题请注意以下几点： 
 >
 > 1、该主题暂时没使用语言包（看什么时候补上吧），所有文案都在模板和function.php中，需要的可自行修改。
 >
