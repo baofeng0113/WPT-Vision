@@ -42,13 +42,11 @@ endif;
 
 if ( ! isset( $content_width ) ) $content_width = 625;
 
-if ( ! function_exists( 'vision_page_menu_args' ) ) :
-function vision_page_menu_args( $args ) {
-	if ( ! isset( $args['show_home'] ) )
-		$args['show_home'] = true;
-	return $args;
+if ( ! function_exists( 'vision_setup' ) ) :
+function vision_setup() {
+    register_nav_menu( 'header-menu', '头部菜单' );
 }
-add_filter( 'wp_page_menu_args', 'vision_page_menu_args' );
+add_action( 'after_setup_theme', 'vision_setup' );
 endif;
 
 if ( ! function_exists( 'vision_widgets_init' ) ) :
@@ -117,12 +115,15 @@ if ( ! function_exists( 'vision_enqueue_scripts' ) ) :
 function vision_enqueue_scripts() {
 	$protocol = is_ssl() ? 'https' : 'http';
 	
-	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . '/asset/bootstrap/css/bootstrap.min.css' );
+	wp_enqueue_style( 'bootstrap', get_template_directory_uri() . 
+        '/asset/bootstrap/css/bootstrap.min.css' );
 	wp_enqueue_style( 'bootstrap-responsive', get_template_directory_uri() . 
-					  '/asset/bootstrap/css/bootstrap-responsive.min.css' );
-	wp_enqueue_style( 'vision', get_stylesheet_uri() );
-	
-	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . '/asset/bootstrap/js/bootstrap.min.js', array( 'jquery' ) );
+        '/asset/bootstrap/css/bootstrap-responsive.min.css' );
+	wp_enqueue_style( 'resets', get_template_directory_uri() . 
+        '/static/styles/reset.css' );
+    wp_enqueue_style( 'vision', get_stylesheet_uri() );
+	wp_enqueue_script( 'bootstrap', get_template_directory_uri() . 
+        '/asset/bootstrap/js/bootstrap.min.js', array( 'jquery' ) );
 	
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
@@ -264,29 +265,37 @@ function vision_title( $title, $sep ) {
 	global $page, $paged;
 	
 	if ( $paged >= 2 || $page >= 2 )
-		$pageline = " | " . sprintf( '第%s页', max( $paged, $page ) );
+		$pagestr = $sep . sprintf( '第%s页', max( $paged, $page ) );
 	else 
-		$pageline = "";
-		
+		$pagestr = "";
+
+    $title = "";
+
+    $blog_desc = get_bloginfo( 'description' );
+    $blog_name = get_bloginfo( 'name' );
+
+    if ( $blog_name != "" && $blog_desc != "" ) {
+        $title = $blog_name . $sep . $blog_desc;
+    } else {
+        $title = $blog_name . $blog_desc;
+    }
+
 	if ( is_single() || is_page() ) {
-		return single_post_title() . ' | ' . get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
-	} 
-	if ( is_search() ) {
-		return wp_specialchars($s) . ' 搜索结果 | ' . get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
-	}
-	if ( is_feed() ) {
-		return '';
-	}
-	if ( is_home() ) { 
-		return get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
-	} 
-	if ( is_category() ) {
-		return single_cat_title() . ' | ' . get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
-	}
-	if ( is_tag() ) {
-		return single_tag_title() . ' | ' . get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
-	} 
-	return get_bloginfo('name') . ' | ' . get_bloginfo('description') . $pageline;
+		echo single_post_title(), $sep, $title;
+	} else if ( is_search() ) {
+		echo '搜索结果：', wp_specialchars($s), 
+            $sep, $title, $pagestr;
+	} else if ( is_home() ) { 
+		echo '首页', $sep, $title;
+	} else if ( is_category() ) {
+		echo '按栏目查看：', single_cat_title(), 
+            $sep, $title, $pagestr;
+	} else if ( is_tag() ) {
+		echo '按标签查看：', single_tag_title(),
+            $sep, $title, $pagestr;
+	} else {
+	    echo $title;
+    }
 }
 add_filter( 'wp_title', 'vision_title', 10, 2 );
 endif;

@@ -21,7 +21,7 @@
 			printf( '<a href="%1$s">%2$s</a> 发表于 <a href="%3$s">%4$s</a>', esc_url( get_author_posts_url( get_the_author_meta( 'ID' ) ) ), 
 			        get_the_author(), esc_url( get_permalink() ),  get_the_date('Y年m月d日') );
 			?> 
-            <i class="icon-edit"></i> <?php edit_post_link( __( '编辑' ) ); ?>
+            <?php edit_post_link( __( '<i class="icon-edit"></i> 编辑' ) ); ?>
             <?php endif; ?>
         </div>
 	</div>

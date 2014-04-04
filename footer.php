@@ -1,4 +1,4 @@
-	<footer id="mastfoot">
+	<footer id="mastfoot" class="footer">
     	<?php 
 		if ( is_active_sidebar( 'sidebar-7' ) ) {
 		?>
@@ -39,13 +39,16 @@
         <?php }?>
     	<div class="copyright text-center">
     	<?php if ( optionsframework_get_option( 'copyright' ) != '' ): ?>
-		<?php echo optionsframework_get_option( 'copyright' ); ?>
+		<?php echo optionsframework_get_option( 'copyright' ); ?> | 
         <?php endif;?>
-        <div>
+        Powered by <a href="http://www.wordpress.org" target="_blank">WordPress</a> <a href="https://github.com/NoteYun/WPT-Vision" target="_blank">Vision</a>
+        </div>
     </footer>
 	<?php wp_footer(); ?>
+    <?php if ( optionsframework_get_option( 'custom_js' ) != '' ): ?>
+    <script type="text/javascript">
+    <?php echo optionsframework_get_option( 'custom_js' ); ?>
+    </script>
+    <?php endif;?>
 </body>
-<?php if ( optionsframework_get_option( 'custom_js' ) != '' ): ?>
-<?php echo optionsframework_get_option( 'custom_js' ); ?>
-<?php endif;?>
 </html>
